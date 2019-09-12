@@ -10,9 +10,12 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+/**
+ * Includes Admin Routes
+ */
+require 'admin.php';
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::view('/admin', 'admin.dashboard.index');
