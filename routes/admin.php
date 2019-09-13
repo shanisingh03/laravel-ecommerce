@@ -9,13 +9,16 @@ Route::group(['prefix'  =>  'admin'], function () {
     Route::post('login', 'Admin\LoginController@login')->name('admin.login.post');
     Route::get('logout', 'Admin\LoginController@logout')->name('admin.logout');
 
-    #Dashboard Routes
+    #Authenticated Routes
     Route::group(['middleware' => ['auth:admin']], function () {
-
+        #Dashboard
         Route::get('/', function () {
             return view('admin.dashboard.index');
         })->name('admin.dashboard');
-    
+        
+        #Settings
+        Route::get('/settings', 'Admin\SettingController@index')->name('admin.settings');
+        Route::post('/settings', 'Admin\SettingController@update')->name('admin.settings.update');
     });
 
 });
