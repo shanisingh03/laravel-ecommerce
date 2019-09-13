@@ -6,18 +6,20 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\BaseController;
 use App\Traits\UploadAble;
+use Illuminate\Http\UploadedFile;
 use App\Models\Setting;
 
 class SettingController extends BaseController
 {
     use UploadAble;
-    
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
         $this->setPageTitle('Settings', 'Manage Settings');
+        
         return view('admin.settings.index');
     }
 
@@ -27,6 +29,7 @@ class SettingController extends BaseController
      */
     public function update(Request $request)
     {
+        
         if ($request->has('site_logo') && ($request->file('site_logo') instanceof UploadedFile)) {
 
             if (config('settings.site_logo') != null) {
@@ -46,7 +49,6 @@ class SettingController extends BaseController
         } else {
 
             $keys = $request->except('_token');
-
             foreach ($keys as $key => $value)
             {
                 Setting::set($key, $value);

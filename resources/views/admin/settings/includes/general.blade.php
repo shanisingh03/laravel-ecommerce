@@ -2,6 +2,9 @@
     <form action="{{ route('admin.settings.update') }}" method="POST" role="form">
         @csrf
         <h3 class="tile-title">General Settings</h3>
+        @php
+        print_r(config('settings.site_name'));
+        @endphp
         <hr>
         <div class="tile-body">
             <div class="form-group">
