@@ -14,6 +14,7 @@
                                     <div class="form-group">
                                         <label for="parent">Select an Attribute <span class="m-l-5 text-danger"> *</span></label>
                                         <select id=parent class="form-control custom-select mt-15" v-model="attribute" @change="selectAttribute(attribute)">
+                                            <option disabled value="">Please select Attribute</option>
                                             <option :value="attribute" v-for="attribute in attributes" v-bind:key="attribute.id"> {{ attribute.name }} </option>
                                         </select>
                                     </div>
@@ -67,7 +68,7 @@
                         </thead>
                         <tbody>
                         <tr v-for="pa in productAttributes" v-bind:key="pa.id">
-                            <td style="width: 25%" class="text-center">{{ pa.value}}</td>
+                            <td style="width: 25%" class="text-center">{{ pa.attribute.name}}</td>
                             <td style="width: 25%" class="text-center">{{ pa.quantity}}</td>
                             <td style="width: 25%" class="text-center">{{ pa.price}}</td>
                             <td style="width: 25%" class="text-center">
@@ -116,6 +117,9 @@
                     _this.productAttributes = response.data;
                 }).catch(function (error) {
                     console.log(error);
+                    _this.$swal("Error, "+error.value, {
+                        icon: "error",
+                    });
                 });
             },
             loadAttributes() {
@@ -124,6 +128,9 @@
                     _this.attributes = response.data;
                 }).catch(function (error) {
                     console.log(error);
+                    _this.$swal("Error, "+error.value, {
+                        icon: "error",
+                    });
                 });
             },
             selectAttribute(attribute) {
@@ -135,6 +142,9 @@
                     _this.attributeValues = response.data;
                 }).catch(function (error) {
                     console.log(error);
+                    _this.$swal("Error, "+error.value, {
+                        icon: "error",
+                    });
                 });
                 this.attributeSelected = true;
             },
@@ -169,10 +179,14 @@
                         _this.currentQty = '';
                         _this.currentPrice = '';
                         _this.valueSelected = false;
+
+                        _this.loadProductAttributes(_this.productid);
                     }).catch(function (error) {
                         console.log(error);
+                        _this.$swal("Error, "+error.value, {
+                            icon: "error",
+                        });
                     });
-                    this.loadProductAttributes(this.productid);
                 }
             },
             deleteProductAttribute(pa) {
@@ -193,15 +207,18 @@
                                 _this.$swal("Success! Product attribute has been deleted!", {
                                     icon: "success",
                                 });
-                                this.loadProductAttributes(this.productid);
+                                _this.loadProductAttributes(this.productid);
                             } else {
                                 _this.$swal("Your Product attribute not deleted!");
                             }
                         }).catch(function (error) {
                             console.log(error);
+                            _this.$swal("Error, "+error.value, {
+                                icon: "error",
+                            });
                         });
                     } else {
-                        this.$swal("Action cancelled!");
+                        _this.$swal("Action cancelled!");
                     }
                 });
             }

@@ -26,7 +26,7 @@ class ProductAttributeController extends BaseController
      */
     public function productAttributes(Request $request)
     {
-        $product = Product::findOrFail($request->id);
+        $product = Product::where('id',$request->id)->with('attributes.attribute')->first();
 
         return response()->json($product->attributes);
     }

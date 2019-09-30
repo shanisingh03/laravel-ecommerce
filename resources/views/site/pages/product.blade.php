@@ -82,10 +82,11 @@
                                                                 <select class="form-control form-control-sm option" style="width:180px;" name="{{ strtolower($attribute->name ) }}">
                                                                     <option data-price="0" value="0"> Select a {{ $attribute->name }}</option>
                                                                     @foreach($product->attributes as $attributeValue)
+                                                                    
                                                                         @if ($attributeValue->attribute_id == $attribute->id)
                                                                             <option
                                                                                 data-price="{{ $attributeValue->price }}"
-                                                                                value="{{ $attributeValue->value }}"> {{ ucwords($attributeValue->value . ' +'. $attributeValue->price) }}
+                                                                                value="{{ $attributeValue->attribute->name }}"> {{ ucwords($attributeValue->attribute->name . ' +'. $attributeValue->price) }}
                                                                             </option>
                                                                         @endif
                                                                     @endforeach

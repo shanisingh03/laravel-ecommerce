@@ -113,7 +113,7 @@
             saveValue() {
                 if (this.value === '') {
                     this.$swal("Error, Value for attribute is required.", {
-                    icon: "error",
+                        icon: "error",
                     });
                 } else {
                     let attributeId = this.attributeid;
