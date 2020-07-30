@@ -1601,8 +1601,9 @@ article:after,
   padding-top: 1rem;
   padding-bottom: 1rem; }
 
+
 .brand-wrap .logo, .navbar-brand .logo {
-  margin-right: 7px;
+  margin-right: 20px;
   max-height: 42px;
   display: inline-block; }
 .brand-wrap .logo-text, .navbar-brand .logo-text {
@@ -2254,4 +2255,9 @@ ul.row, ul.row-sm {
 
 .title-desc{
   color: #E9EAEF;
+}
+
+.product-list-image{
+  max-height: 428px;
+  min-height: 428px;
 }

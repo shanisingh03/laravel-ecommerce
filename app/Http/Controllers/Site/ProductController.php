@@ -28,8 +28,9 @@ class ProductController extends BaseController
     {
         $product = $this->productRepository->findProductBySlug($slug);
         $attributes = $this->attributeRepository->listAttributes();
+        $relevant_products = $this->productRepository->findRelevantProductsBySlug($slug);
 
-        return view('site.pages.product', compact('product', 'attributes'));
+        return view('site.pages.product', compact('product', 'attributes','relevant_products'));
     }
 
     /**
@@ -40,8 +41,17 @@ class ProductController extends BaseController
     {
         $product = $this->productRepository->findProductById($request->productId);
         $options = $request->except('_token', 'productId', 'price', 'qty');
-    
-        Cart::add(uniqid(), $product->name, $request->input('price'), $request->input('qty'), $options);
+        // dd($options);
+        Cart::add(
+            array(
+                'id'                => uniqid(), 
+                'name'              => $product->name, 
+                'price'             => $request->input('price'), 
+                'quantity'          => $request->input('qty'), 
+                'attributes'        => $options, 
+                'conditions'        => $product->images->first()->full ?? 'https://via.placeholder.com/176'
+            )
+        );
     
         return redirect()->back()->with('message', 'Item added to cart successfully.');
     }

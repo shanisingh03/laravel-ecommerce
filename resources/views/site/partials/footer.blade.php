@@ -60,13 +60,11 @@
         <section class="footer-bottom row border-top-white">
             <div class="col-sm-6">
                 <p class="text-white-50"> Made with
-                    <3 <br> by Vosidiy M.</p>
+                    <span class="fa fa-heart"></span> by <a href="https://sentriqoitsolutions.com">Sentriqo IT Solutions</a></p>
             </div>
             <div class="col-sm-6">
                 <p class="text-md-right text-white-50">
-                    Copyright &copy
-                    <br>
-                    <a href="http://bootstrap-ecommerce.com" class="text-white-50">Bootstrap-ecommerce UI kit</a>
+                    Copyright &copy {{date('Y')}} <a href="{{ config('app.url') }}" class="text-white-50">{{ config('settings.site_name') }}</a>
                 </p>
             </div>
         </section>

@@ -5,7 +5,8 @@
                 <div class="col-lg-3">
                     <div class="brand-wrap">
                         <a href="{{ url('/') }}">
-                            <img class="logo" src="{{ asset('frontend/images/logo-dark.png') }}" alt="logo">
+                            <img class="logo" src="{{ asset('frontend/images/logo.png') }}" alt="logo">
+                            <h2 class='logo-text'>{{ config('settings.site_name') }}</h2>
                         </a>
                     </div>
                 </div>
@@ -25,6 +26,15 @@
                     <div class="widgets-wrap d-flex justify-content-end">
                         <div class="widget-header">
                             <a href="{{route('checkout.cart')}}" class="icontext">
+                                <div class="icon-wrap icon-xs bg-danger round text-white"><i
+                                        class="fa fa-heart"></i></div>
+                                <div class="text-wrap">
+                                    <small>{{ $cartCount }} items</small>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="widget-header">
+                            <a href="{{route('checkout.cart')}}" class="icontext">
                                 <div class="icon-wrap icon-xs bg2 round text-secondary"><i
                                         class="fa fa-shopping-cart"></i></div>
                                 <div class="text-wrap">
@@ -36,15 +46,15 @@
                             <div class="widget-header">
                                 <a href="{{ route('login') }}" class="ml-3 icontext">
                                     <div class="icon-wrap icon-xs bg-primary round text-white"><i class="fa fa-user"></i></div>
-                                    <div class="text-wrap"><span>Login</span></div>
+                                    <div class="text-wrap"><span>Account</span></div>
                                 </a>
                             </div>
-                            <div class="widget-header">
+                            {{--  <div class="widget-header">
                                 <a href="{{ route('register') }}" class="ml-3 icontext">
                                     <div class="icon-wrap icon-xs bg-success round text-white"><i class="fa fa-user"></i></div>
                                     <div class="text-wrap"><span>Register</span></div>
                                 </a>
-                            </div>
+                            </div>  --}}
                         @else
                             <ul class="navbar-nav ml-auto">
                                 <li class="nav-item dropdown">

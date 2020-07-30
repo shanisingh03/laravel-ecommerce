@@ -24,8 +24,8 @@
                                     @if ($product->images->count() > 0)
                                         <div class="img-big-wrap">
                                             <div class="padding-y">
-                                                <a href="{{ asset('storage/'.$product->images->first()->full) }}" data-fancybox="">
-                                                    <img src="{{ asset('storage/'.$product->images->first()->full) }}" alt="">
+                                                <a class="main-image-anchor" href="{{ asset('storage/'.$product->images->first()->full) }}" data-fancybox="">
+                                                    <img class="main-image" src="{{ asset('storage/'.$product->images->first()->full) }}" alt="">
                                                 </a>
                                             </div>
                                         </div>
@@ -40,7 +40,7 @@
                                         <div class="img-small-wrap">
                                             @foreach($product->images as $image)
                                                 <div class="item-gallery">
-                                                    <img src="{{ asset('storage/'.$image->full) }}" alt="">
+                                                    <img class="item-gallery-small-img" src="{{ asset('storage/'.$image->full) }}" alt="{{$product->name}}">
                                                 </div>
                                             @endforeach
                                         </div>
@@ -54,19 +54,18 @@
                                         <dt class="col-sm-3">SKU</dt>
                                         <dd class="col-sm-9">{{ $product->sku }}</dd>
                                         <dt class="col-sm-3">Weight</dt>
-                                        <dd class="col-sm-9">{{ $product->weight }}</dd>
+                                        <dd class="col-sm-9">{{ $product->weight }} grams</dd>
                                     </dl>
                                     <div class="mb-3">
-                                        @if ($product->sale_price > 0)
-                                            <var class="price h3 text-danger">
-                                                <span class="currency">{{ config('settings.currency_symbol') }}</span><span class="num" id="productPrice">{{ $product->sale_price }}</span>
-                                                <del class="price-old"> {{ config('settings.currency_symbol') }}{{ $product->price }}</del>
-                                            </var>
-                                        @else
-                                            <var class="price h3 text-success">
-                                                <span class="currency">{{ config('settings.currency_symbol') }}</span><span class="num" id="productPrice">{{ $product->price }}</span>
-                                            </var>
-                                        @endif
+                                        <var class="price h3 text-danger">
+                                            <span class="currency">{{ config('settings.currency_symbol') }}</span>
+                                            @if($product->attributes->count() > 1)
+                                                <span class="num" id="productPrice">{{ $product->attributes->min('price') }} - {{ $product->attributes->max('price') }}</span>
+                                            @else
+                                                <span class="num" id="productPrice">{{ $product->attributes->max('price') }}</span>
+                                            @endif
+                                        </var>
+                                        
                                     </div>
                                     <hr>
                                     <form action="{{ route('product.add.cart') }}" method="POST" role="form" id="addToCart">
@@ -80,13 +79,14 @@
                                                             <dt>{{ $attribute->name }}: </dt>
                                                             <dd>
                                                                 <select class="form-control form-control-sm option" style="width:180px;" name="{{ strtolower($attribute->name ) }}">
-                                                                    <option data-price="0" value="0"> Select a {{ $attribute->name }}</option>
-                                                                    @foreach($product->attributes as $attributeValue)
-                                                                    
+                                                                    <option data-price="0" value="0" disabled> Select a {{ $attribute->name }}</option>
+                                                                    @foreach($product->attributes as $attributeIndex => $attributeValue)
                                                                         @if ($attributeValue->attribute_id == $attribute->id)
                                                                             <option
                                                                                 data-price="{{ $attributeValue->price }}"
-                                                                                value="{{ $attributeValue->attribute->name }}"> {{ ucwords($attributeValue->attribute->name . ' +'. $attributeValue->price) }}
+                                                                                {{$attributeIndex==0 ? 'selected' : ''}}
+                                                                                value="{{ $attributeValue->value }}"> 
+                                                                                {{ ucwords($attributeValue->value) . ' - ' . config('settings.currency_symbol').' '.$attributeValue->price }}
                                                                             </option>
                                                                         @endif
                                                                     @endforeach
@@ -128,6 +128,184 @@
             </div>
         </div>
     </section>
+
+    <section class="section-content padding-y-sm bg">
+        <div class="container">
+
+            <header class="section-heading heading-line">
+                <h4 class="title-section bg">Related Products</h4>
+            </header>
+            <div class="row">
+                @forelse($relevant_products as $product)
+                    <div class="col-md-3 product-list-image">
+                        <figure class="card card-product">
+                            <div class="img-wrap">
+                                @if(!empty($product->images))
+                                    <img class="p-2" src="{{ asset('storage/'.$product->images->first()->full) }}" alt="{{$product->name}}" height="100%">
+                                @else
+                                    <img src="https://via.placeholder.com/240" alt="{{$product->name}}">
+                                @endif
+                            </div>
+                            <figcaption class="info-wrap">
+                                <a href="{{ route('product.show', $product->slug) }}">
+                                    <h4 class="title">{{$product->name}}</h4>
+                                </a>
+
+                                <p class="desc">
+                                    {{$product->brand->name}} - {{$product->categories->first()->name}}
+                                </p>
+                            </figcaption>
+                            <div class="bottom-wrap">
+                                <a href="{{ route('product.show', $product->slug) }}" class="btn btn-sm btn-primary float-right">
+                                    <span class="fa fa-eye"></span>
+                                    View
+                                </a>
+                                <div class="price-wrap h5">
+                                    <span class="currency">{{ config('settings.currency_symbol') }}</span>
+                                    @if($product->attributes->count() > 1)
+                                        <span class="price-new" id="productPrice">{{ $product->attributes->min('price') }}</span>
+                                        -
+                                        <span class="price-new" id="productPrice">{{ $product->attributes->max('price') }}</span>
+                                    @else
+                                        <span class="price-new" id="productPrice">{{ $product->attributes->max('price') }}</span>
+                                    @endif
+                                </div>
+                                <!-- price-wrap.// -->
+                            </div>
+                            <!-- bottom-wrap.// -->
+                        </figure>
+                    </div>
+                @empty
+                    <div class="col-md-3">
+                        <figure class="card card-product">
+                            <div class="img-wrap"><img src="https://via.placeholder.com/240"></div>
+                            <figcaption class="info-wrap">
+                                <h4 class="title">Another name of item</h4>
+                                <p class="desc">Some small description goes here</p>
+                                <div class="rating-wrap">
+                                    <ul class="rating-stars">
+                                        <li style="width:80%" class="stars-active">
+                                            <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                        </li>
+                                    </ul>
+                                    <div class="label-rating">132 reviews</div>
+                                    <div class="label-rating">154 orders </div>
+                                </div>
+                                <!-- rating-wrap.// -->
+                            </figcaption>
+                            <div class="bottom-wrap">
+                                <a href="" class="btn btn-sm btn-primary float-right">Add To Cart</a>
+                                <div class="price-wrap h5">
+                                    <span class="price-new">$1280</span> <del class="price-old">$1980</del>
+                                </div>
+                                <!-- price-wrap.// -->
+                            </div>
+                            <!-- bottom-wrap.// -->
+                        </figure>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <figure class="card card-product">
+                            <div class="img-wrap"><img src="https://via.placeholder.com/240"> </div>
+                            <figcaption class="info-wrap">
+                                <h4 class="title">Good product</h4>
+                                <p class="desc">Some small description goes here</p>
+                                <div class="rating-wrap">
+                                    <ul class="rating-stars">
+                                        <li style="width:80%" class="stars-active">
+                                            <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                        </li>
+                                    </ul>
+                                    <div class="label-rating">132 reviews</div>
+                                    <div class="label-rating">154 orders </div>
+                                </div>
+                                <!-- rating-wrap.// -->
+                            </figcaption>
+                            <div class="bottom-wrap">
+                                <a href="" class="btn btn-sm btn-primary float-right">Add To Cart</a>
+                                <div class="price-wrap h5">
+                                    <span class="price-new">$1280</span> <del class="price-old">$1980</del>
+                                </div>
+                                <!-- price-wrap.// -->
+                            </div>
+                            <!-- bottom-wrap.// -->
+                        </figure>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <figure class="card card-product">
+                            <div class="img-wrap"><img src="https://via.placeholder.com/240"></div>
+                            <figcaption class="info-wrap">
+                                <h4 class="title">Product name goes here</h4>
+                                <p class="desc">Some small description goes here</p>
+                                <div class="rating-wrap">
+                                    <ul class="rating-stars">
+                                        <li style="width:80%" class="stars-active">
+                                            <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                        </li>
+                                    </ul>
+                                    <div class="label-rating">132 reviews</div>
+                                    <div class="label-rating">154 orders </div>
+                                </div>
+                                <!-- rating-wrap.// -->
+                            </figcaption>
+                            <div class="bottom-wrap">
+                                <a href="" class="btn btn-sm btn-primary float-right">Add To Cart</a>
+                                <div class="price-wrap h5">
+                                    <span class="price-new">$1280</span> <del class="price-old">$1980</del>
+                                </div>
+                                <!-- price-wrap.// -->
+                            </div>
+                            <!-- bottom-wrap.// -->
+                        </figure>
+                    </div>
+
+                    <div class="col-md-3">
+                        <figure class="card card-product">
+                            <div class="img-wrap"><img src="https://via.placeholder.com/240"></div>
+                            <figcaption class="info-wrap">
+                                <h4 class="title">Product name goes here</h4>
+                                <p class="desc">Some small description goes here</p>
+                                <div class="rating-wrap">
+                                    <ul class="rating-stars">
+                                        <li style="width:80%" class="stars-active">
+                                            <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                        </li>
+                                    </ul>
+                                    <div class="label-rating">132 reviews</div>
+                                    <div class="label-rating">154 orders </div>
+                                </div>
+                                <!-- rating-wrap.// -->
+                            </figcaption>
+                            <div class="bottom-wrap">
+                                <a href="" class="btn btn-sm btn-primary float-right">Add To Cart</a>
+                                <div class="price-wrap h5">
+                                    <span class="price-new">$1280</span> <del class="price-old">$1980</del>
+                                </div>
+                                <!-- price-wrap.// -->
+                            </div>
+                            <!-- bottom-wrap.// -->
+                        </figure>
+                    </div>
+                @endforelse
+            </div>
+
+        </div>
+        <!-- container .//  -->
+    </section>
+
 @stop
 @push('scripts')
     <script>
@@ -135,17 +313,26 @@
             $('#addToCart').submit(function (e) {
                 if ($('.option').val() == 0) {
                     e.preventDefault();
-                    alert('Please select an option');
+                    alert('Please select a size.');
                 }
             });
             $('.option').change(function () {
                 $('#productPrice').html("{{ $product->sale_price != '' ? $product->sale_price : $product->price }}");
                 let extraPrice = $(this).find(':selected').data('price');
                 let price = parseFloat($('#productPrice').html());
-                let finalPrice = (Number(extraPrice) + price).toFixed(2);
+                let finalPrice = (Number(extraPrice)).toFixed(2);
                 $('#finalPrice').val(finalPrice);
                 $('#productPrice').html(finalPrice);
             });
+
+            $('.item-gallery-small-img').click( function (e){
+                var imageSrc =  e.target.src;
+
+                $('.main-image-anchor').attr("href", imageSrc);
+                $('.main-image').attr("src", imageSrc);
+
+            });
+
         });
     </script>
 @endpush

@@ -150,4 +150,12 @@ class CategoryRepository extends BaseRepository implements CategoryContract
             ->where('menu', 1)
             ->first();
     }
+
+    public function getFeaturedCategory()
+    {
+        return Category::where('featured',1)
+                ->select('id','name','slug','image')
+                ->get()
+                ->random(3);
+    }
 }

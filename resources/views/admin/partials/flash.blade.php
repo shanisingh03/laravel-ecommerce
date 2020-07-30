@@ -4,6 +4,7 @@
     $info = Session::get('info');
     $warnings = Session::get('warning');
 @endphp
+
 @if ($errors) @foreach($errors as $key => $value)
     <div class="alert alert-danger alert-dismissible" role="alert">
         <button class="close" type="button" data-dismiss="alert">×</button>

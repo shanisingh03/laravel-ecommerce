@@ -15,7 +15,7 @@
  */
 require 'admin.php';
 
-Route::view('/', 'site.pages.homepage');
+Route::get('/', 'Site\HomePageController@getHomePage')->name('index');
 
 
 Auth::routes();

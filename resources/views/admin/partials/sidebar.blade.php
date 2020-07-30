@@ -42,6 +42,21 @@
             </a>
         </li>
         
+        {{--  CMS  --}}
+        <li class="treeview">
+            <a class="app-menu__item" href="#" data-toggle="treeview"
+                ><i class="app-menu__icon fa fa-file-text"></i
+                ><span class="app-menu__label">CMS</span
+                ><i class="treeview-indicator fa fa-angle-right"></i
+            ></a>
+            <ul class="treeview-menu">
+                <li>
+                    <a class="treeview-item" href="blank-page.html"
+                        ><i class="icon fa fa-circle-o"></i> Banners</a
+                    >
+                </li>
+            </ul>
+        </li>
         {{--  Settings  --}}
         <li>
             <a class="app-menu__item {{ Route::currentRouteName() == 'admin.settings' ? 'active' : '' }}" href="{{ route('admin.settings') }}">

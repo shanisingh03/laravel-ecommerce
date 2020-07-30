@@ -44,4 +44,33 @@ interface ProductContract
      * @return mixed
      */
     public function findProductBySlug($slug);
+
+    /**
+     * @param Nill
+     * @return Array
+     */
+    public function getTopThreeProducts();
+
+    /**
+     * Get Featured Products
+     * @param Nill
+     * @return Array $products
+     */
+    public function getFeaturedProducts();
+
+    /**
+     * Get Newly Added Products
+     * @param Nill
+     * @return Array $products
+     */
+    public function getNewProducts();
+    
+    /**
+     * Find Relevant Products By Slug
+     * @param String $slug
+     * @return Array $products
+     */
+    public function findRelevantProductsBySlug($slug);
+
+
 }

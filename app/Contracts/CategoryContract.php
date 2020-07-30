@@ -49,4 +49,10 @@ interface CategoryContract
     * @return mixed
     */
     public function findBySlug($slug);
+
+    /**
+     * @param Nill
+     * @return array
+     */
+    public function getFeaturedCategory();
 }

@@ -68,7 +68,7 @@
                         </thead>
                         <tbody>
                         <tr v-for="pa in productAttributes" v-bind:key="pa.id">
-                            <td style="width: 25%" class="text-center">{{ pa.attribute.name}}</td>
+                            <td style="width: 25%" class="text-center">{{ pa.value}}</td>
                             <td style="width: 25%" class="text-center">{{ pa.quantity}}</td>
                             <td style="width: 25%" class="text-center">{{ pa.price}}</td>
                             <td style="width: 25%" class="text-center">
@@ -207,7 +207,7 @@
                                 _this.$swal("Success! Product attribute has been deleted!", {
                                     icon: "success",
                                 });
-                                _this.loadProductAttributes(this.productid);
+                                _this.loadProductAttributes(_this.productid);
                             } else {
                                 _this.$swal("Your Product attribute not deleted!");
                             }

@@ -128,8 +128,82 @@ class ProductRepository extends BaseRepository implements ProductContract
      */
     public function findProductBySlug($slug)
     {
-        $product = Product::where('slug', $slug)->first();
+        $product = Product::where('slug', $slug)->with('images','attributes','brand','categories')->first();
 
         return $product;
+    }
+
+    /**
+     * @param Nill
+     * @return Get Products
+     */
+    public function getTopThreeProducts()
+    {
+        $products = Product::with('images','attributes')->get()->random(3);
+
+        return $products;
+    }
+
+    /**
+     * Get Featured Products
+     * @param Nill
+     * @return Array $products
+     */
+    public function getFeaturedProducts()
+    {
+        $products = Product::with('images','attributes','brand','categories')
+                        ->where('featured',1)
+                        ->get()
+                        ->random(3);
+
+        return $products;
+    }
+
+    /**
+     * Get Newly Added Products
+     * @param Nill
+     * @return Array $products
+     */
+    public function getNewProducts()
+    {
+        $products = Product::with('images','attributes','brand','categories')
+                        ->orderBy('created_at')
+                        ->limit(8)
+                        ->get();
+
+        return $products;
+    }
+
+    /**
+     * Find Relevant Products By Slug
+     * @param String $slug
+     * @return Array $products
+     */
+    public function findRelevantProductsBySlug($slug)
+    {
+        // Products
+        $product = Product::where('slug', $slug)->with('categories')->first();
+
+        // If No Product Return Blank Array
+        if(empty($product)){
+            return [];
+        }
+
+        $product_category_ids = $product->categories->first()->id;
+        // Get Relevant Products
+        $products = Product::with('images','attributes','brand')
+            ->whereHas('categories', function($q) use($product_category_ids){
+                $q->whereIn('category_id', [$product_category_ids]);
+            })
+            ->where('id','!=',$product->id)
+            ->orderBy('created_at')
+            ->limit(4)
+            ->get();
+        
+        if(count($products) == 0){
+            $products = $this->getNewProducts();
+        }
+
+        return $products;
     }
 }

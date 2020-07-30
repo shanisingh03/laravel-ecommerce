@@ -10,6 +10,12 @@
         </div>
     </div>
     @include('admin.partials.flash')
+    @if(count($errors) > 0)
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button class="close" type="button" data-dismiss="alert">×</button>
+            <strong>Error!</strong> {{ $errors->first() }}
+        </div>
+    @endif
     <div class="row user">
         <div class="col-md-3">
             <div class="tile p-0">
@@ -113,14 +119,14 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label class="control-label" for="special_price">Special Price</label>
+                                            <label class="control-label" for="sale_price">Sale Price</label>
                                             <input
                                                 class="form-control"
                                                 type="text"
                                                 placeholder="Enter product special price"
-                                                id="special_price"
-                                                name="special_price"
-                                                value="{{ old('special_price', $product->special_price) }}"
+                                                id="sale_price"
+                                                name="sale_price"
+                                                value="{{ old('sale_price', $product->sale_price) }}"
                                             />
                                         </div>
                                     </div>

@@ -84,7 +84,9 @@ Route::group(['prefix'  =>  'admin'], function () {
             // Delete product attribute from the current product
             Route::post('attributes/delete', 'Admin\ProductAttributeController@deleteAttribute');
          
-         });
+        });
+
+        #CMS
     });
 
 });
